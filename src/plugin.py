@@ -517,6 +517,13 @@ def recordingsOpen(session, *args, **kwargs):
 	from MovieSelection import EMCSelection
 	session.openWithCallback(showMoviesCallback, EMCSelection)
 
+def menu(menuid, **kwargs):
+	#Called whenever a menu is created
+	if menuid == "mainmenu":
+		#first string is menu title, then function to call, then id string and then weight (position in menu)
+		return [(_("Aufnamen"), recordingsOpen, "EMC", 11)]
+	return []
+
 def Plugins(**kwargs):
 	from EnhancedMovieCenter import EMCVersion
 	descriptors = []
@@ -530,4 +537,8 @@ def Plugins(**kwargs):
 
 	if config.EMC.extmenu_list.value and not config.EMC.ml_disable.value:
 		descriptors.append( PluginDescriptor(name = "Enhanced Movie Center", description = "Enhanced Movie Center " + _("movie manipulation list"), where = PluginDescriptor.WHERE_EXTENSIONSMENU, fnc = recordingsOpen) )
+
+	#add EMC to MainMenu descriptor
+	descriptors.append( PluginDescriptor(name = "MediaPlayer", description = "Play back media files", icon = "EnhancedMovieCenter.png", where = PluginDescriptor.WHERE_MENU, needsRestart = False, fnc = menu) )
+
 	return descriptors
